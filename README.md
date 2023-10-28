@@ -8,9 +8,10 @@ Under `~/.config/templater/config.toml`.
 
 Usage: Every template is a `table`. Each one has:
 
-|  Name    |  Description                                        | Default                               |
-|----------|-----------------------------------------------------|---------------------------------------|
-| `source` | Directory under `~/.config/plantill/` to copy over  | `~/.config/plantill/[template name]`  |
+|  Name                 |  Description                                                                          |
+|-----------------------|---------------------------------------------------------------------------------------|
+| `source`              | Directory under `~/.config/plantill/` to copy over                                    |
+| `should_replace_name` | Toggles the replacement of `plantillname` and `PLANTILLNAME` with the project's name" |
 
 ### Templates
 After adding the folder under `~/.config/plantill`
@@ -34,9 +35,9 @@ source = "latex"
 - [x] Verify that selected template folder exists (implicit)
 - [x] Try to copy it over to current location
 - [x] Replace corresponding keys with project name
- - [x] "PLANTILL_NAME" for the upper name
+ - [x] "PLANTILLNAME" for the upper name
      - [ ] In file names
      - [x] Inside files
- - [x] "plantill_name" for the lower name
+ - [x] "plantillname" for the lower name
      - [x] In file names
      - [x] Inside files
