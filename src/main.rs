@@ -1,11 +1,13 @@
 /// A personal project to use templates so that starting projects in languages that don't have a cargo new equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
-
 pub mod parse;
-use std::{fs::{self, File, remove_file}, io::Write};
-use copy_dir::copy_dir;
-use dialoguer::{theme::ColorfulTheme, Select, Input};
-use toml::Value;
 use crate::parse::parse_config;
+use copy_dir::copy_dir;
+use dialoguer::{theme::ColorfulTheme, Input, Select};
+use std::{
+    fs::{self, remove_file, File},
+    io::Write,
+};
+use toml::Value;
 
 /// The directory where the configuration and templates must be saved. As of now, it is immutable.
 pub const CONFIG_ROOT: &str = "~/.config/plantill/";
@@ -20,10 +22,12 @@ fn main() {
                 sources.push(v);
                 if let Value::Boolean(v) = m["should_replace_name"].clone() {
                     repl.push(v);
-                } else { 
-                    panic!("[CONFIG ERROR]: {} does not specify if it should have its name changed folder in the config file", &t); 
+                } else {
+                    panic!("[CONFIG ERROR]: {} does not specify if it should have its name changed folder in the config file", &t);
                 }
-            } else { panic!("[CONIG ERROR]: {t} does not have its source folder in the config file"); }
+            } else {
+                panic!("[CONIG ERROR]: {t} does not have its source folder in the config file");
+            }
         }
         (sels, sources, repl)
     };
@@ -31,11 +35,19 @@ fn main() {
     let selection_idx = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Template: ")
         .items(&selections[..])
-        .interact() .unwrap();
+        .interact()
+        .unwrap();
 
-    let source_path = format!("{}{}", shellexpand::tilde(CONFIG_ROOT), sources[selection_idx]);
+    let source_path = format!(
+        "{}{}",
+        shellexpand::tilde(CONFIG_ROOT),
+        sources[selection_idx]
+    );
 
-    println!("Selected: '{}'. Will attempt to transfer over '{}'", selections[selection_idx], source_path);
+    println!(
+        "Selected: '{}'. Will attempt to transfer over '{}'",
+        selections[selection_idx], source_path
+    );
 
     let project_name: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Project name")
@@ -52,32 +64,29 @@ fn main() {
         std::process::exit(0); // Don't need to replace, we're done
     }
 
-    for path in paths {
-        if path.as_ref().unwrap().path().is_dir() { continue; }
-        let path = path.unwrap().path();
-        // Contents
-        eprintln!("{:?}", path);
+    for dir_entry in paths {
+        if dir_entry.as_ref().unwrap().path().is_dir() { continue; }
+        let path = dir_entry.unwrap().path();
+
+        // --------- Contents ----------
         let mut file_contents = fs::read_to_string(&path).unwrap();
-        eprintln!("Before:");
-        eprintln!("{:?}", file_contents);
 
         file_contents = file_contents.replace("PLANTILLNAME", &project_name.to_uppercase());
         file_contents = file_contents.replace("plantillname", &project_name);
-        
-        eprintln!("After:");
-        eprintln!("{:?}", file_contents);
+        let mut file = File::create(&path).unwrap();
 
-        let mut file = File::create(&path).unwrap(); 
-        eprintln!("Saving new contents:");
         file.write_all(file_contents.as_bytes()).unwrap();
 
-        // Filenames
-        let new_path = path.clone().to_str().to_owned().unwrap()
+        // --------- Filenames ----------
+        let new_path = path
+            .clone()
+            .to_str()
+            .to_owned()
+            .unwrap()
             .replace("plantillname", &project_name);
-        
+
         remove_file(path).unwrap();
-        let mut new_file = File::create(&new_path).unwrap(); 
+        let mut new_file = File::create(&new_path).unwrap();
         new_file.write_all(file_contents.as_bytes()).unwrap();
     }
 }
-
