@@ -1,6 +1,18 @@
 # Plantill
 A personal project to use templates so that starting projects in languages that don't have a `cargo new` equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
 
+## Instalation
+Git clone, compile it and add the binary (`target/release/plantill`) to `$PATH`. For ease, there's
+an included `justfile` that compiles it (`cargo build --release`) and adds it to `$PATH` by 
+copying it to `~/.local/bin` to use it:
+```sh
+git clone [url]
+just copy 
+``` 
+
+It may be done manually as well, it's just a binary that should be in `$PATH` for 
+convenience (or, hell, you can even alias to it).
+
 ## Usage
 The basics are simple: the config (`config.toml`) and templates (directories next to `config.toml`) are to be stored under 
 `~/.config/plantill` (this path is hard-coded and is, as-of-now, not modifiable without recompiling the binary).
