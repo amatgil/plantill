@@ -2,14 +2,14 @@
 A personal project to use templates so that starting projects in languages that don't have a `cargo new` equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
 
 ## Usage
-The basics are simple: the config (`config.toml`) and templates (directories next to `config.toml`) are stored under 
-`~/.config/plantill` (this path is hard-coded and is, as-of-now, not-changable without recompiling the binary).
+The basics are simple: the config (`config.toml`) and templates (directories next to `config.toml`) are to be stored under 
+`~/.config/plantill` (this path is hard-coded and is, as-of-now, not modifiable without recompiling the binary).
 
 Then, in some directory, run the binary "`plantill`", select the template and a project name, and the template
-will be copied over with all instanced `plantillname` and `PLANTILLNAME` replaced with the project name in
+will be copied over with all instances of "`plantillname`" and "`PLANTILLNAME`" replaced with the project name in
 lower and upper case accordingly. 
 
-### Config
+## Config
 Under `~/.config/templater/config.toml`.
 Usage: Every template is a `table`. Each one has:
 
@@ -19,7 +19,7 @@ Usage: Every template is a `table`. Each one has:
 | `should_replace_name` | Toggles the replacement of `plantillname` and `PLANTILLNAME` with the project's name |
 
 
-#### Example
+### Example
 Check the above section for each line's meaning
 
 ```toml
@@ -34,7 +34,7 @@ should_replace_name = false
 
 Example of `~/.config/plantill/`
 ```text
-.
+./
 |
 +-- config.toml
 +-- lispt/  <-- a template listed as a source
@@ -55,7 +55,7 @@ Example of `~/.config/plantill/`
 - [x] Try to copy it over to current location
 - [x] Replace corresponding keys with project name
  - [x] "PLANTILLNAME" for the upper name
-     - [ ] In file names
+     - [ ] In file names (deemed unnecessary, is trivial to add)
      - [x] Inside files
  - [x] "plantillname" for the lower name
      - [x] In file names
