@@ -9,20 +9,6 @@ use dialoguer::{theme::ColorfulTheme, Select, Input};
 
 use crate::parse::parse_config;
 
-// TODO:
-// - [x] Parse toml, extract templates
-// - [x] Ask for which to use
-// - [x] Ask for project name
-// - [x] Verify that selected template folder exists (implicit)
-// - [x] Try to copy it over to current location
-// - [ ] Replace corresponding keys with project name
-//  - [ ] "PLANTILL_NAME" for the upper name
-//      - [ ] In file names
-//      - [ ] Inside files
-//  - [ ] "plantill_name" for the lower name
-//      - [ ] In file names
-//      - [ ] Inside files
-
 const CONFIG_ROOT: &str = "~/.config/plantill/";
 
 fn main() {
@@ -86,9 +72,9 @@ fn main() {
         let new_path = path.clone().to_str().to_owned().unwrap()
             .replace("plantillname", &project_name);
         
+        remove_file(path).unwrap();
         let mut new_file = File::create(&new_path).unwrap(); 
         new_file.write(file_contents.as_bytes()).unwrap();
-        remove_file(path).unwrap();
     }
 }
 

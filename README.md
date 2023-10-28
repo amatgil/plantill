@@ -25,3 +25,18 @@ source = "lispt"
 [LaTeX]
 source = "latex"
 ```
+
+## Roadmap
+
+- [x] Parse toml, extract templates
+- [x] Ask for which to use
+- [x] Ask for project name
+- [x] Verify that selected template folder exists (implicit)
+- [x] Try to copy it over to current location
+- [x] Replace corresponding keys with project name
+ - [x] "PLANTILL_NAME" for the upper name
+     - [ ] In file names
+     - [x] Inside files
+ - [x] "plantill_name" for the lower name
+     - [x] In file names
+     - [x] Inside files
