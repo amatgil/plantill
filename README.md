@@ -4,7 +4,7 @@ A personal project to use templates so that starting projects in languages that 
 ## Instalation
 Git clone, compile it and add the binary (`target/release/plantill`) to `$PATH`. For ease, there's
 an included `justfile` that compiles it (`cargo build --release`) and adds it to `$PATH` by 
-copying it to `~/.local/bin` to use it:
+copying it to `~/.local/bin`. To use the `justfile`:
 ```sh
 git clone [url]
 just copy 
