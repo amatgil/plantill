@@ -16,10 +16,10 @@ Usage: Every template is a `table`. Each one has:
 After adding the folder under `~/.config/plantill`
 
 #### Example
-Check the above section for each section's meaning
+Check the above section for each line's meaning
 
 ```toml
-[lispt]
+[lispt] # Table name, template name
 source = "lispt"
 
 [LaTeX]

@@ -1,11 +1,15 @@
-use std::{fs::{File, self}, collections::HashMap};
+use std::{fs::{File, self}, collections::HashMap, borrow::Cow};
 
 
 use toml::Value;
 
+use crate::CONFIG_ROOT;
+
 pub fn parse_config() -> Vec<(String, toml::map::Map<String, Value>)> {
-    let config_path  = shellexpand::tilde("~/.config/plantill/config.toml");
-    let toml_content = fs::read_to_string(&*config_path).expect("ERROR: Could not find config file.");
+    let config_path = format!("{}/config.toml", CONFIG_ROOT);
+    let toml_content = fs::read_to_string(&*shellexpand::tilde(&config_path))
+        .expect("ERROR: Could not find config file.");
+
     let toml_value: Result<Value, _> = toml_content.parse();
 
     let mut out = vec![];
