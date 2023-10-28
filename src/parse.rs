@@ -1,10 +1,10 @@
+/// Turn the TOML into the internally used format
+
 use std::fs;
-
-
 use toml::Value;
-
 use crate::CONFIG_ROOT;
 
+/// Flatten the toml (which is interpreted as a table of tables) into a vector of the inner tables.
 pub fn parse_config() -> Vec<(String, toml::map::Map<String, Value>)> {
     let config_path = format!("{}/config.toml", CONFIG_ROOT);
     let toml_content = fs::read_to_string(&*shellexpand::tilde(&config_path))

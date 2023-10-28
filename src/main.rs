@@ -1,15 +1,14 @@
-pub mod parse;
+/// A personal project to use templates so that starting projects in languages that don't have a cargo new equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
 
+pub mod parse;
 use std::{fs::{self, File, remove_file}, io::Write};
 use copy_dir::copy_dir;
-
-use toml::*;
-
 use dialoguer::{theme::ColorfulTheme, Select, Input};
-
+use toml::Value;
 use crate::parse::parse_config;
 
-const CONFIG_ROOT: &str = "~/.config/plantill/";
+/// The directory where the configuration and templates must be saved. As of now, it is immutable.
+pub const CONFIG_ROOT: &str = "~/.config/plantill/";
 
 fn main() {
     let tables = parse_config();
