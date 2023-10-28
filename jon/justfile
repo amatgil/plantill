@@ -1,4 +1,0 @@
-run:
-	sbcl --script main.lisp
-debug:
-	sbcl --script main.lisp 2>&1 >/dev/null | less
