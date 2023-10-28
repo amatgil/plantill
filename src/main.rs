@@ -74,8 +74,8 @@ fn main() {
         file_contents = file_contents.replace("PLANTILLNAME", &project_name.to_uppercase());
         file_contents = file_contents.replace("plantillname", &project_name);
         let mut file = File::create(&path).unwrap();
-
-        file.write_all(file_contents.as_bytes()).unwrap();
+        file.write_all(file_contents.as_bytes()).unwrap(); // This line might be
+                                                           // redundant, not sure
 
         // --------- Filenames ----------
         let new_path = path

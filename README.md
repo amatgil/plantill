@@ -2,10 +2,15 @@
 A personal project to use templates so that starting projects in languages that don't have a `cargo new` equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
 
 ## Usage
+The basics are simple: the config (`config.toml`) and templates (directories next to `config.toml`) are stored under 
+`~/.config/plantill` (this path is hard-coded and is, as-of-now, not-changable without recompiling the binary).
+
+Then, in some directory, run the binary "`plantill`", select the template and a project name, and the template
+will be copied over with all instanced `plantillname` and `PLANTILLNAME` replaced with the project name in
+lower and upper case accordingly. 
 
 ### Config
 Under `~/.config/templater/config.toml`.
-
 Usage: Every template is a `table`. Each one has:
 
 |  Name                 |  Description                                                                         |
@@ -13,12 +18,9 @@ Usage: Every template is a `table`. Each one has:
 | `source`              | Directory under `~/.config/plantill/` to copy over                                   |
 | `should_replace_name` | Toggles the replacement of `plantillname` and `PLANTILLNAME` with the project's name |
 
-### Templates
-After adding the folder under `~/.config/plantill`
 
 #### Example
 Check the above section for each line's meaning
-
 
 ```toml
 [lispt]
@@ -28,6 +30,20 @@ should_replace_name = true
 [LaTeX]
 source = "latex"
 should_replace_name = false
+```
+
+Example of `~/.config/plantill/`
+```text
+.
+|
++-- config.toml
++-- lispt/  <-- a template listed as a source
+|    |-- Some file
+|    |-- Some other file
+|      
++-- latex/  <-- another template also listed as a source
+|    |-- Some some file
+|    |-- Some some other file
 ```
 
 ## Roadmap
