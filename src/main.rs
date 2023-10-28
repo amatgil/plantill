@@ -49,6 +49,10 @@ fn main() {
 
     let paths = fs::read_dir(&project_name).unwrap();
 
+    if !should_replace[selection_idx] {
+        std::process::exit(0); // Don't need to replace, we're done
+    }
+
     for path in paths {
         if path.as_ref().unwrap().path().is_dir() { continue; }
         let path = path.unwrap().path();
@@ -66,7 +70,7 @@ fn main() {
 
         let mut file = File::create(&path).unwrap(); 
         eprintln!("Saving new contents:");
-        file.write(file_contents.as_bytes()).unwrap();
+        file.write_all(file_contents.as_bytes()).unwrap();
 
         // Filenames
         let new_path = path.clone().to_str().to_owned().unwrap()
@@ -74,7 +78,7 @@ fn main() {
         
         remove_file(path).unwrap();
         let mut new_file = File::create(&new_path).unwrap(); 
-        new_file.write(file_contents.as_bytes()).unwrap();
+        new_file.write_all(file_contents.as_bytes()).unwrap();
     }
 }
 
