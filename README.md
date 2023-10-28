@@ -8,10 +8,10 @@ Under `~/.config/templater/config.toml`.
 
 Usage: Every template is a `table`. Each one has:
 
-|  Name                 |  Description                                                                          |
-|-----------------------|---------------------------------------------------------------------------------------|
-| `source`              | Directory under `~/.config/plantill/` to copy over                                    |
-| `should_replace_name` | Toggles the replacement of `plantillname` and `PLANTILLNAME` with the project's name" |
+|  Name                 |  Description                                                                         |
+|-----------------------|--------------------------------------------------------------------------------------|
+| `source`              | Directory under `~/.config/plantill/` to copy over                                   |
+| `should_replace_name` | Toggles the replacement of `plantillname` and `PLANTILLNAME` with the project's name |
 
 ### Templates
 After adding the folder under `~/.config/plantill`
@@ -19,12 +19,15 @@ After adding the folder under `~/.config/plantill`
 #### Example
 Check the above section for each line's meaning
 
+
 ```toml
-[lispt] # Table name, template name
+[lispt]
 source = "lispt"
+should_replace_name = true
 
 [LaTeX]
 source = "latex"
+should_replace_name = false
 ```
 
 ## Roadmap
