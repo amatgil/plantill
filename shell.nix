@@ -8,10 +8,8 @@ let
     rustfmt
     clippy
     clang
+    cargo
     mold
-
-    wasm-pack
-    wasm-bindgen-cli
   ];
 in
 pkgs.mkShell {
