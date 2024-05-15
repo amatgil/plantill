@@ -1,11 +1,11 @@
 /// A personal project to use templates so that starting projects in languages that don't have a cargo new equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
 pub mod parse;
 use crate::parse::parse_config;
-use copy_dir::copy_dir;
 use dialoguer::{theme::ColorfulTheme, Input, Select};
 use std::{
     fs::{self, remove_file, File},
     io::Write,
+    path::Path,
 };
 use toml::Value;
 
@@ -56,7 +56,8 @@ fn main() {
 
     println!("Continuing with project name: '{project_name}'");
 
-    copy_dir(source_path, &project_name).unwrap();
+    copy_dir(&source_path, &project_name).unwrap();
+    println!("Copying succeeded");
 
     let paths = fs::read_dir(&project_name).unwrap();
 
@@ -66,6 +67,7 @@ fn main() {
 
     for dir_entry in paths {
         if dir_entry.as_ref().unwrap().path().is_dir() { continue; }
+        println!("Changing names in: {dir_entry:?}");
         let path = dir_entry.unwrap().path();
 
         // --------- Contents ----------
@@ -73,6 +75,7 @@ fn main() {
 
         file_contents = file_contents.replace("PLANTILLNAME", &project_name.to_uppercase());
         file_contents = file_contents.replace("plantillname", &project_name);
+        remove_file(path.clone()).unwrap();
         let mut file = File::create(&path).unwrap();
         file.write_all(file_contents.as_bytes()).unwrap(); // This line might be
                                                            // redundant, not sure
@@ -85,8 +88,25 @@ fn main() {
             .unwrap()
             .replace("plantillname", &project_name);
 
-        remove_file(path).unwrap();
-        let mut new_file = File::create(&new_path).unwrap();
-        new_file.write_all(file_contents.as_bytes()).unwrap();
+        if path.to_str().expect("Path wasn't valid unicode") != new_path {
+            remove_file(path).unwrap();
+            let mut new_file = File::create(&new_path).unwrap();
+            new_file.write_all(file_contents.as_bytes()).unwrap();
+        }
     }
+}
+
+
+fn copy_dir(from_path: impl AsRef<Path>, to_path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+    fs::create_dir(&to_path)?;
+    for entry in fs::read_dir(from_path)? {
+        let entry = entry?;
+        let ty = entry.file_type()?;
+        if ty.is_dir() {
+            copy_dir(entry.path(), to_path.as_ref().join(entry.file_name()))?;
+        } else {
+            fs::copy(entry.path(), to_path.as_ref().join(entry.file_name()))?;
+        }
+    }
+    Ok(())
 }
