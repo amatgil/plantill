@@ -1,11 +1,12 @@
 /// A personal project to use templates so that starting projects in languages that don't have a cargo new equivalent doesn't take so long (e.g. LaTeX or Common Lisp).
 pub mod parse;
 use crate::parse::parse_config;
-use dialoguer::{theme::ColorfulTheme, Input, Select};
 use std::{
+    env::args,
     fs::{self, remove_file, File},
     io::Write,
     path::Path,
+    process::exit,
 };
 use toml::Value;
 
@@ -32,11 +33,39 @@ fn main() {
         (sels, sources, repl)
     };
 
-    let selection_idx = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Template: ")
-        .items(&selections[..])
-        .interact()
-        .unwrap();
+    let mut args = args();
+    _ = args.next(); // binary name
+
+    let Some(arg) = args.next() else {
+        eprintln!("You forgot the argument (use -options to list them)");
+        exit(1)
+    };
+    if ["-help", "--help"].contains(&&*arg) {
+        println!("'-help' for help, '-options' for options");
+        exit(0);
+    } else if ["-options", "--options"].contains(&&*arg) {
+        println!("Options are:");
+        for s in selections {
+            match s.strip_prefix("copet-") {
+                Some(langname) => println!("\t{s}\t({langname})"),
+                None => println!("\t{s}"),
+            }
+        }
+        exit(0);
+    }
+    let Some(project_name) = args.next() else {
+        eprintln!("You forgot the name of the project (second argument, the one after the name)");
+        exit(1)
+    };
+
+    // We got option
+    let Some(selection_idx) = selections
+        .iter()
+        .position(|s| s == &arg || s == &format!("copet-{arg}"))
+    else {
+        println!("'{arg}' is not recognized as an option (use -options to list them)");
+        exit(2);
+    };
 
     let source_path = format!(
         "{}{}",
@@ -48,11 +77,6 @@ fn main() {
         "Selected: '{}'. Will attempt to transfer over '{}'",
         selections[selection_idx], source_path
     );
-
-    let project_name: String = Input::with_theme(&ColorfulTheme::default())
-        .with_prompt("Project name")
-        .interact_text()
-        .unwrap();
 
     println!("Continuing with project name: '{project_name}'");
 
@@ -66,7 +90,9 @@ fn main() {
     }
 
     for dir_entry in paths {
-        if dir_entry.as_ref().unwrap().path().is_dir() { continue; }
+        if dir_entry.as_ref().unwrap().path().is_dir() {
+            continue;
+        }
         println!("Changing names in: {dir_entry:?}");
         let path = dir_entry.unwrap().path();
 
@@ -96,8 +122,10 @@ fn main() {
     }
 }
 
-
-fn copy_dir(from_path: impl AsRef<Path>, to_path: impl AsRef<Path>) -> Result<(), Box<dyn std::error::Error>> {
+fn copy_dir(
+    from_path: impl AsRef<Path>,
+    to_path: impl AsRef<Path>,
+) -> Result<(), Box<dyn std::error::Error>> {
     fs::create_dir(&to_path)?;
     for entry in fs::read_dir(from_path)? {
         let entry = entry?;

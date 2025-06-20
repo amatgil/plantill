@@ -17,7 +17,7 @@ pub fn parse_config() -> Vec<(String, toml::map::Map<String, Value>)> {
             if let Value::Table(table) = value {
                 for (key, subvalue) in table.iter() {
                     if let Value::Table(t) = subvalue {
-                        println!("Detected table: {}", key);
+                        //eprintln!("Detected table: {}", key);
                         out.push((key.clone(), t.clone()));
                     }
                 }

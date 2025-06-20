@@ -6,9 +6,8 @@ let
   packages = with pkgs; [
     rust-analyzer
     rustfmt
-    clippy
-    clang
-    cargo
+    mold
+    rust-bin.stable.latest.default
     mold
   ];
 in
